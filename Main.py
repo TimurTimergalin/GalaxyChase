@@ -11,6 +11,9 @@ player = pygame.sprite.Group()
 
 Player(all_sprites, player)
 
+bg = pygame.image.load('data/background.png')
+bg_y = 0
+
 run = True
 clock = pygame.time.Clock()
 while run:
@@ -26,7 +29,11 @@ while run:
     if keys[pygame.BUTTON_LEFT] or keys[pygame.K_SPACE]:
         player.update(SHOOT_MADE)
 
-    screen.fill((0, 0, 0))
+    screen.blit(bg, (0, bg_y))
+    screen.blit(bg, (0, bg_y - HEIGHT))
+    bg_y += 1200 / FPS
+    if bg_y >= HEIGHT:
+        bg_y = 0
     all_sprites.update()
     all_sprites.draw(screen)
     pygame.display.flip()
