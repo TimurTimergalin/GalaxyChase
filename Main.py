@@ -3,7 +3,7 @@ from constant import *
 from Ship import *
 pygame.init()
 
-size = width, height = 350, 700
+size = WIDTH, HEIGHT
 screen = pygame.display.set_mode(size)
 
 all_sprites = pygame.sprite.Group()

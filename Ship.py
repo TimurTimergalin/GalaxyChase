@@ -30,13 +30,13 @@ class Player(Ship):
         self.speed = 360 / FPS
         self.image = Player.image
         self.rect = self.image.get_rect()
-        self.rect.x = 350 // 2 + self.rect.width // 2
+        self.rect.x = WIDTH // 2 + self.rect.width // 2
         self.rect.y = 500
 
     def update(self, *args):
-        if args and args[0] == MOVE_RIGHT:
+        if args and args[0] == MOVE_RIGHT and self.rect.x + self.rect.width + self.speed <= WIDTH:
             self.rect = self.rect.move(self.speed, 0)
-        if args and args[0] == MOVE_LEFT:
+        if args and args[0] == MOVE_LEFT and self.rect.x - self.speed >= 0:
             self.rect = self.rect.move(-self.speed, 0)
         if args and args[0] == SHOOT_MADE:
             self.shoot()
