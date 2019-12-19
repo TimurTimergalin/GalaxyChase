@@ -1,6 +1,5 @@
 import pygame
 from constant import *
-from load_image import *  # Возможно, не нужно
 
 
 class Ship(pygame.sprite.Sprite):
