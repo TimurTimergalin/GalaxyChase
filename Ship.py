@@ -1,5 +1,6 @@
 import pygame
 from constant import *
+import random
 
 
 class Ship(pygame.sprite.Sprite):
@@ -41,3 +42,30 @@ class Player(Ship):
         if args and args[0] == SHOOT_MADE:
             self.shoot()
         Ship.update(self, *args)
+
+
+class BackEnemy(Ship):
+    image = pygame.image.load('data/back_enemy.png')
+    image.set_colorkey(image.get_at((0, 0)))
+    coord_x = 0
+
+    def __init__(self, group, *groups):
+        super(BackEnemy, self).__init__(group, groups)
+        self.image = BackEnemy.image
+        self.rect = self.image.get_rect()
+        self.rect.x = BackEnemy.coord_x
+        BackEnemy.coord_x = 250
+        self.rect.y = HEIGHT - 50
+        self.speed = 480
+
+    def update(self, *args):
+        if self.rect.x <= 0:
+            self.speed *= -1
+            self.rect.x += 10
+        elif self.rect.x + self.rect.width >= WIDTH:
+            self.speed *= -1
+            self.rect.x -= 10
+        else:
+            self.rect.x += self.speed / FPS
+        if random.randint(1, 50) == 1:
+            self.speed *= -1

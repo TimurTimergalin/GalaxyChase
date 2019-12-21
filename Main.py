@@ -8,8 +8,11 @@ screen = pygame.display.set_mode(size)
 
 all_sprites = pygame.sprite.Group()
 player = pygame.sprite.Group()
+enemies = pygame.sprite.Group()
 
 Player(all_sprites, player)
+BackEnemy(all_sprites, enemies)
+BackEnemy(all_sprites, enemies)
 
 bg = pygame.image.load('data/background.png')
 bg_y = 0
