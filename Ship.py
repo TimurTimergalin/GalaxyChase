@@ -4,9 +4,8 @@ import random
 
 
 class Ship(pygame.sprite.Sprite):
-    def __init__(self, group, *groups):
-        super(Ship, self).__init__(group)
-        self.add(*groups)
+    def __init__(self, *groups):
+        super(Ship, self).__init__(groups)
         self.collide = False
         self.c = 1
 
@@ -26,8 +25,8 @@ class Player(Ship):
     image = pygame.image.load('data/player.png')
     image.set_colorkey(image.get_at((0, 0)))
 
-    def __init__(self, group, *groups):
-        Ship.__init__(self, group, groups)
+    def __init__(self, *groups):
+        Ship.__init__(self, groups)
         self.speed = 360 / FPS
         self.image = Player.image
         self.rect = self.image.get_rect()
@@ -49,8 +48,8 @@ class BackEnemy(Ship):
     image.set_colorkey(image.get_at((0, 0)))
     coord_x = 0
 
-    def __init__(self, group, *groups):
-        super(BackEnemy, self).__init__(group, groups)
+    def __init__(self, *groups):
+        super(BackEnemy, self).__init__(groups)
         self.image = BackEnemy.image
         self.rect = self.image.get_rect()
         self.rect.x = BackEnemy.coord_x
