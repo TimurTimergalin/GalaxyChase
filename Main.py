@@ -1,6 +1,7 @@
 import pygame
 from constant import *
 from Ship import *
+from new_front_enemy import new_front_enemy
 pygame.init()
 
 size = WIDTH, HEIGHT
@@ -37,6 +38,8 @@ while run:
     bg_y += 1200 / FPS
     if bg_y >= HEIGHT:
         bg_y = 0
+
+    new_front_enemy(all_sprites, enemies)
     all_sprites.update()
     all_sprites.draw(screen)
     pygame.display.flip()
