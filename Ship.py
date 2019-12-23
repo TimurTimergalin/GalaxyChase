@@ -4,20 +4,33 @@ import random
 
 
 class Ship(pygame.sprite.Sprite):
+    boom = pygame.image.load('data/boom.png')
+
     def __init__(self, *groups):
         super(Ship, self).__init__(groups)
-        self.collide = False
-        self.c = 1
+        self.collided = False
+        self.frames = []
+        self.cut_sheet(Ship.boom, BOOM_WIDTH, BOOM_HEIGHT)
+        self.cur_frame = 0
 
     def update(self, *args):
         if self.collide:
-            self.collided()
+            self.collide()
 
     def shoot(self):
         pass
 
-    def collided(self):
+    def collide(self):
         pass  # feature
+
+    def cut_sheet(self, sheet, columns, rows):
+        self.new_rect = pygame.Rect(0, 0, sheet.get_width() // columns,
+                                    sheet.get_height() // rows)
+        for j in range(rows):
+            for i in range(columns):
+                frame_location = (self.new_rect.w * i, self.new_rect.h * j)
+                self.frames.append(sheet.subsurface(pygame.Rect(
+                    frame_location, self.new_rect.size)))
 
 
 class Player(Ship):
