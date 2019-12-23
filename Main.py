@@ -11,9 +11,9 @@ all_sprites = pygame.sprite.Group()
 player = pygame.sprite.Group()
 enemies = pygame.sprite.Group()
 
-Player(all_sprites, player)
-BackEnemy(all_sprites, enemies)
-BackEnemy(all_sprites, enemies)
+Player(enemies, all_sprites, player)
+BackEnemy(player, all_sprites, enemies)
+BackEnemy(player, all_sprites, enemies)
 
 bg = pygame.image.load('data/background.png')
 bg_y = 0
@@ -39,7 +39,7 @@ while run:
     if bg_y >= HEIGHT:
         bg_y = 0
 
-    new_front_enemy(all_sprites, enemies)
+    new_front_enemy(player, all_sprites, enemies)
     all_sprites.update()
     all_sprites.draw(screen)
     pygame.display.flip()
