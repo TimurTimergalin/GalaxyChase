@@ -11,14 +11,13 @@ class Ship(pygame.sprite.Sprite):
 
     def update(self, *args):
         if self.collide:
-            try:
-                self.image = pygame.image.load(f'data/boom{self.c}')
-                self.c += 1
-            except Exception:
-                self.kill()
+            self.collided()
 
     def shoot(self):
         pass
+
+    def collided(self):
+        pass  # feature
 
 
 class Player(Ship):
