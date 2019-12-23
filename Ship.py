@@ -67,3 +67,21 @@ class BackEnemy(Ship):
             self.rect.x += self.speed / FPS
         if random.randint(1, 50) == 1:
             self.speed *= -1
+
+
+class FrontEnemy(Ship):
+    image = pygame.image.load('data/front_enemy.png')
+    image.set_colorkey(image.get_at((0, 0)))
+
+    def __init__(self, *groups):
+        super(FrontEnemy, self).__init__(groups)
+        self.image = FrontEnemy.image
+        self.rect = self.image.get_rect()
+        self.rect.x = random.randint(0, WIDTH - self.rect.width)
+        self.rect.y = -self.rect.height - 1
+        self.speed = 480
+
+    def update(self, *args):
+        self.rect = self.rect.move(0, self.speed / FPS)
+        if self.rect.y >= HEIGHT:
+            self.kill()
