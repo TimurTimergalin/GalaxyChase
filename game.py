@@ -110,7 +110,40 @@ def start_screen(screen):
                 elif planet_x <= event.pos[0] <= planet_x + planet.get_width() and \
                         -HEIGHT // 2 - planet.get_height() + dy1 <= event.pos[1] <=\
                         -HEIGHT // 2 - planet.get_height() + dy1 + planet.get_height():
+                    return controls_screen(screen)
+        pygame.display.flip()
+        clock.tick(FPS)
+
+
+def controls_screen(screen):
+    clock = pygame.time.Clock()
+    run = True
+    font = pygame.font.SysFont('arialblack', 24)
+
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    run = False
+                else:
                     pygame.mixer.music.stop()
                     return game(screen)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pygame.mixer.music.stop()
+                return game(screen)
+
+        screen.fill((0, 0, 0))
+
+        text1 = 'move: W and S or \u2190 and \u2192'
+        text2 = 'shoot: SPACE or MOUSE1'
+
+        sur1 = font.render(text1, 1, (255, 255, 255))
+        sur2 = font.render(text2, 1, (255, 255, 255))
+
+        screen.blit(sur1, (4, 200))
+        screen.blit(sur2, (4, 400))
+
         pygame.display.flip()
         clock.tick(FPS)
