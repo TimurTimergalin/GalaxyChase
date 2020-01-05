@@ -18,7 +18,9 @@ class Ship(pygame.sprite.Sprite):
             self.collide()
 
     def shoot(self):
-        pass
+        bullet = Bullet(x, y)
+        all_sprites.add(bullet)
+        bullets.add(bullet)
 
     def collide(self):
         try:
@@ -132,3 +134,20 @@ class FrontEnemy(Ship):
                 i.kill()
 
         Ship.update(self, *args)
+
+
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((10, 10))
+        self.image.fill((255, 0, 0))
+        self.rect = self.image.get_rect()
+        self.rect.bottom = y
+        self.rect.centerx = x
+        self.speedy = -10
+
+    def update(self):
+        self.rect.y += self.speedy
+        if self.rect.bottom < 0:
+            self.kill()
+

@@ -6,6 +6,7 @@ import sys
 
 
 def game(screen):
+    bullets = pygame.sprite.Group()
     all_sprites = pygame.sprite.Group()
     player = pygame.sprite.Group()
     enemies = pygame.sprite.Group()
@@ -38,6 +39,10 @@ def game(screen):
             player.update(MOVE_LEFT)
         if keys[pygame.BUTTON_LEFT] or keys[pygame.K_SPACE]:
             player.update(SHOOT_MADE)
+
+        all_sprites.update()
+
+        hits = pygame.sprite.groupcollide(enemies, bullets, True, True)
 
         screen.blit(bg, (0, bg_y))
         screen.blit(bg, (0, bg_y - HEIGHT))
