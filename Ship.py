@@ -44,7 +44,7 @@ class Player(Ship):
     def __init__(self, enemy_group, *groups):
         Ship.__init__(self, groups)
         self.enemy_group = enemy_group
-        self.effects = {}
+        self.effects = set()
         self.speed = 360 / FPS
         self.image = Player.image
         self.rect = self.image.get_rect()
@@ -93,6 +93,7 @@ class BackEnemy(Ship):
 class FrontEnemy(Ship):
     image = pygame.image.load('data/front_enemy.png')
     image.set_colorkey(image.get_at((0, 0)))
+    chance = 50
 
     def __init__(self, player, *groups):
         super(FrontEnemy, self).__init__(groups)

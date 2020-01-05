@@ -3,6 +3,7 @@ from constant import *
 from Ship import *
 from Bonus import *
 from new_front_enemy import new_front_enemy
+from new_bonus import new_bonus
 import sys
 
 
@@ -10,6 +11,7 @@ def game(screen):
     all_sprites = pygame.sprite.Group()
     player = pygame.sprite.Group()
     enemies = pygame.sprite.Group()
+    bonuses = pygame.sprite.Group()
 
     Player(enemies, all_sprites, player)
     BackEnemy(player, all_sprites, enemies)
@@ -47,6 +49,7 @@ def game(screen):
             bg_y = 0
 
         new_front_enemy(player, all_sprites, enemies)
+        new_bonus(player, all_sprites, bonuses)
         all_sprites.update()
         all_sprites.draw(screen)
         for i in player:
