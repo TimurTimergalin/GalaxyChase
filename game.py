@@ -1,6 +1,7 @@
 import pygame
 from constant import *
 from Ship import *
+from Bonus import *
 from new_front_enemy import new_front_enemy
 import sys
 
@@ -48,6 +49,10 @@ def game(screen):
         new_front_enemy(player, all_sprites, enemies)
         all_sprites.update()
         all_sprites.draw(screen)
+        for i in player:
+            for j in i.effects:
+                if j == 'shield':
+                    screen.blit(pygame.transform.scale(Shield.image, (22, 23)), (325, 5))
         pygame.display.flip()
         if not len(player):
             return start_screen(screen)
