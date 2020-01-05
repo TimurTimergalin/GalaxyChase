@@ -33,6 +33,9 @@ def game(screen):
                 if event.key == pygame.K_ESCAPE:
                     pygame.mixer.music.stop()
                     return start_screen(screen)
+            if event.type == IS_DEAD:
+                pygame.time.set_timer(IS_DEAD, 0)
+                return start_screen(screen)
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
@@ -57,8 +60,6 @@ def game(screen):
                 if j == 'shield':
                     screen.blit(pygame.transform.scale(Shield.image, (22, 23)), (325, 5))
         pygame.display.flip()
-        if not len(player):
-            return start_screen(screen)
         clock.tick(FPS)
 
 

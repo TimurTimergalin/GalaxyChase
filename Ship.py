@@ -118,6 +118,8 @@ class FrontEnemy(Ship):
                 self.rect = self.rect.move(-64, -64)
                 if 'shield' not in i.effects:
                     i.kill()
+                    pygame.mixer.music.stop()
+                    pygame.time.set_timer(IS_DEAD, 1000)
                 else:
                     i.effects.discard('shield')
 
