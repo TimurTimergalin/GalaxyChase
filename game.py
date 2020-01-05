@@ -150,12 +150,15 @@ def controls_screen(screen):
 
         text1 = 'move: W and S or \u2190 and \u2192'
         text2 = 'shoot: SPACE or MOUSE1'
+        text3 = 'main menu: ESCAPE'
 
         sur1 = font.render(text1, 1, (255, 255, 255))
         sur2 = font.render(text2, 1, (255, 255, 255))
+        sur3 = font.render(text3, 1, (255, 255, 255))
 
         screen.blit(sur1, (4, 200))
         screen.blit(sur2, (4, 400))
+        screen.blit(sur3, (4, 300))
 
         pygame.display.flip()
         clock.tick(FPS)
