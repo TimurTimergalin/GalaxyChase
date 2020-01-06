@@ -47,7 +47,7 @@ class Shield(Bonus):
 class Bomb(Bonus):
     image = pygame.image.load('data/bomb.png')
     image.set_colorkey(image.get_at((1, 0)))
-    chance = 5000
+    chance = 12000
 
     def __init__(self, player, enemy, *groups):
         super().__init__(player, enemy, *groups)
@@ -64,7 +64,7 @@ class Bomb(Bonus):
             if type(i) == BackEnemy:
                 continue
             i.collided = True
-            break
+
 
     def update(self):
         self.rect = self.rect.move(0, self.speed)
