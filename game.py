@@ -31,14 +31,17 @@ def game(screen):
                 if event.key == pygame.K_ESCAPE:
                     pygame.mixer.music.stop()
                     return start_screen(screen)
+                if event.key == pygame.K_SPACE:
+                    player.update(SHOOT_MADE)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == pygame.BUTTON_LEFT:
+                    player.update(SHOOT_MADE)
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             player.update(MOVE_RIGHT)
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             player.update(MOVE_LEFT)
-        if keys[pygame.BUTTON_LEFT] or keys[pygame.K_SPACE]:
-            player.update(SHOOT_MADE)
 
         all_sprites.update()
 
@@ -53,6 +56,8 @@ def game(screen):
         new_front_enemy(player, all_sprites, enemies)
         all_sprites.update()
         all_sprites.draw(screen)
+        bullets.update()
+        bullets.draw(screen)
         pygame.display.flip()
         if not len(player):
             return start_screen(screen)

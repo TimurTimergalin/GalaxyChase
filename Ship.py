@@ -7,22 +7,20 @@ from shoots import Bullet
 class Ship(pygame.sprite.Sprite):
     boom = pygame.image.load('data/boom.png')
 
-    def __init__(self, *groups):
+    def __init__(self, bullets, *groups):
         super(Ship, self).__init__(groups)
         self.collided = False
         self.frames = []
         self.cut_sheet(Ship.boom, BOOM_WIDTH, BOOM_HEIGHT)
         self.cur_frame = 0
+        self.bullets = bullets
 
     def update(self, *args):
         if self.collided:
             self.collide()
 
-    def shoot(self, bullets, cords, *groups):
-        bullet = Bullet(cords)
-        groups[0][0].add(bullet)
-        bullets.add(bullet)
-
+    def shoot(self, cords, speed, *groups):
+        Bullet(cords, speed, *groups)
 
     def collide(self):
         try:
@@ -46,7 +44,7 @@ class Player(Ship):
     image.set_colorkey(image.get_at((0, 0)))
 
     def __init__(self, bullets, enemy_group, *groups):
-        Ship.__init__(self, groups)
+        Ship.__init__(self, bullets, *groups)
         self.enemy_group = enemy_group
         self.speed = 360 / FPS
         self.image = Player.image
@@ -54,8 +52,6 @@ class Player(Ship):
         self.rect.x = WIDTH // 2 + self.rect.width // 2
         self.rect.y = 500
         self.mask = pygame.mask.from_surface(self.image)
-        self.groups = groups
-        self.bullets = bullets
 
     def update(self, *args):
         if args and args[0] == MOVE_RIGHT and self.rect.x + self.rect.width + self.speed <= WIDTH:
@@ -63,7 +59,7 @@ class Player(Ship):
         if args and args[0] == MOVE_LEFT and self.rect.x - self.speed >= 0:
             self.rect = self.rect.move(-self.speed, 0)
         if args and args[0] == SHOOT_MADE:
-            self.shoot(self.bullets, self.rect, self.groups)
+            self.shoot((self.rect.x + self.rect.w // 2, self.rect.y), -2000 / FPS, self.bullets)
         for i in self.enemy_group:
             if pygame.sprite.collide_mask(self, i):
                 self.collided = True
@@ -80,30 +76,32 @@ class BackEnemy(Ship):
     coord_x = 0
 
     def __init__(self, bullets, player, *groups):
-        super(BackEnemy, self).__init__(groups)
+        super(BackEnemy, self).__init__(bullets, *groups)
         self.player = player
         self.image = BackEnemy.image
         self.rect = self.image.get_rect()
         self.rect.x = BackEnemy.coord_x
         BackEnemy.coord_x = 250
         self.rect.y = HEIGHT - 50
-        self.speed = 480
+        self.speed = 240
         self.mask = pygame.mask.from_surface(self.image)
         self.groups = groups
-        self.bullets = bullets
 
     def update(self, *args):
-        if self.rect.x <= 0:
-            self.speed *= -1
-            self.rect.x += 10
-        elif self.rect.x + self.rect.width >= WIDTH:
-            self.speed *= -1
-            self.rect.x -= 10
-        else:
-            self.rect.x += self.speed / FPS
         if random.randint(1, 50) == 1:
             self.speed *= -1
-            self.shoot(self.bullets, self.rect, self.groups)
+        if self.rect.x <= 0:
+            if self.speed < 0:
+                self.speed *= -1
+            self.rect = self.rect.move(10, 0)
+        elif self.rect.x + self.rect.width >= WIDTH:
+            if self.speed > 0:
+                self.speed *= -1
+            self.rect = self.rect.move(-10, 0)
+        else:
+            self.rect = self.rect.move(self.speed / FPS, 0)
+        if random.randint(1, 50) == 1:
+            self.shoot((self.rect.x + self.rect.w // 2, self.rect.y), -2000 / FPS, self.bullets)
 
         for i in self.player:
             if pygame.sprite.collide_mask(self, i):
@@ -118,14 +116,14 @@ class FrontEnemy(Ship):
     image = pygame.image.load('data/front_enemy.png')
     image.set_colorkey(image.get_at((0, 0)))
 
-    def __init__(self, player, *groups):
-        super(FrontEnemy, self).__init__(groups)
+    def __init__(self, bullets, player, *groups):
+        super(FrontEnemy, self).__init__(bullets, *groups)
         self.player = player
         self.image = FrontEnemy.image
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(0, WIDTH - self.rect.width)
         self.rect.y = -self.rect.height - 1
-        self.speed = 480
+        self.speed = 360
         self.mask = pygame.mask.from_surface(self.image)
 
     def update(self, *args):
