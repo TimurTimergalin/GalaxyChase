@@ -60,8 +60,6 @@ def game(screen):
                 if j == 'shield':
                     screen.blit(pygame.transform.scale(Shield.image, (22, 23)), (325, 5))
         pygame.display.flip()
-        if not len(player):
-            return start_screen(screen, False)
         clock.tick(FPS)
 
 
