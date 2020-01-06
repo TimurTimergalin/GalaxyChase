@@ -51,7 +51,7 @@ def game(screen):
         if bg_y >= HEIGHT:
             bg_y = 0
 
-        new_front_enemy(player, all_sprites, enemies)
+        new_front_enemy(player, bullets, all_sprites, enemies)
         all_sprites.update()
         all_sprites.draw(screen)
         bullets.update()
