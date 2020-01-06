@@ -45,8 +45,6 @@ def game(screen):
 
         all_sprites.update()
 
-        hits = pygame.sprite.groupcollide(enemies, bullets, True, True)
-
         screen.blit(bg, (0, bg_y))
         screen.blit(bg, (0, bg_y - HEIGHT))
         bg_y += 1200 / FPS

@@ -88,27 +88,18 @@ class BackEnemy(Ship):
         self.groups = groups
 
     def update(self, *args):
+        if self.rect.x <= 0:
+            self.speed *= -1
+            self.rect.x += 10
+        elif self.rect.x + self.rect.width >= WIDTH:
+            self.speed *= -1
+            self.rect.x -= 10
+        else:
+            self.rect.x += self.speed / FPS
         if random.randint(1, 50) == 1:
             self.speed *= -1
-        if self.rect.x <= 0:
-            if self.speed < 0:
-                self.speed *= -1
-            self.rect = self.rect.move(10, 0)
-        elif self.rect.x + self.rect.width >= WIDTH:
-            if self.speed > 0:
-                self.speed *= -1
-            self.rect = self.rect.move(-10, 0)
-        else:
-            self.rect = self.rect.move(self.speed / FPS, 0)
-        if random.randint(1, 50) == 1:
+        if random.randint(1, 250) == 1:
             self.shoot((self.rect.x + self.rect.w // 2, self.rect.y), -2000 / FPS, self.bullets)
-
-        for i in self.player:
-            if pygame.sprite.collide_mask(self, i):
-                self.collided = True
-                self.rect.x -= 64
-                self.rect.y -= 64
-                i.kill()
         Ship.update(self, *args)
 
 
