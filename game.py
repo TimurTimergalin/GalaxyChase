@@ -29,7 +29,7 @@ def game(screen):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pygame.mixer.music.stop()
-                    return start_screen(screen)
+                    return start_screen(screen, False)
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
@@ -50,11 +50,11 @@ def game(screen):
         all_sprites.draw(screen)
         pygame.display.flip()
         if not len(player):
-            return start_screen(screen)
+            return start_screen(screen, False)
         clock.tick(FPS)
 
 
-def start_screen(screen):
+def start_screen(screen, first_time=True):
     pygame.mixer.music.load('C:/Users/1/Documents/Python 3.6/GalaxyChase/data/start.mp3')
     pygame.mixer.music.play()
 
@@ -72,10 +72,18 @@ def start_screen(screen):
     font = pygame.font.SysFont('arialblack', 30)
 
     while run:
+        text = font.render('Galaxy Chase', 1, (255, 200, 0))
+        if not first_time:
+            bg_y = text.get_height()
+            dy1 = HEIGHT + text.get_height()
+            dy = HEIGHT + text.get_height()
+            go_down = False
         screen.blit(bg, (0, bg_y))
         screen.blit(bg, (0, bg_y - HEIGHT))
-        text = font.render('Galaxy Chase', 1, (255, 200, 0))
-        screen.blit(text, ((WIDTH - text.get_width()) // 2, (HEIGHT - text.get_height()) // 2 + dy))
+        if first_time:
+            screen.blit(text, ((WIDTH - text.get_width()) // 2, (HEIGHT - text.get_height()) // 2 + dy))
+        else:
+            screen.blit(text, (65, 220))
         screen.blit(planet, (planet_x, -HEIGHT // 2 - planet.get_height() + dy1))
         if go_down:
             dy += 50 / FPS
@@ -110,7 +118,11 @@ def start_screen(screen):
                 elif planet_x <= event.pos[0] <= planet_x + planet.get_width() and \
                         -HEIGHT // 2 - planet.get_height() + dy1 <= event.pos[1] <=\
                         -HEIGHT // 2 - planet.get_height() + dy1 + planet.get_height():
-                    return controls_screen(screen)
+                    if first_time:
+                        return controls_screen(screen)
+                    else:
+                        pygame.mixer.music.stop()
+                        return game(screen)
         pygame.display.flip()
         clock.tick(FPS)
 
@@ -138,12 +150,15 @@ def controls_screen(screen):
 
         text1 = 'move: W and S or \u2190 and \u2192'
         text2 = 'shoot: SPACE or MOUSE1'
+        text3 = 'main menu: ESCAPE'
 
         sur1 = font.render(text1, 1, (255, 255, 255))
         sur2 = font.render(text2, 1, (255, 255, 255))
+        sur3 = font.render(text3, 1, (255, 255, 255))
 
         screen.blit(sur1, (4, 200))
         screen.blit(sur2, (4, 400))
+        screen.blit(sur3, (4, 300))
 
         pygame.display.flip()
         clock.tick(FPS)

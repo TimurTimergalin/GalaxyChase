@@ -1,7 +1,6 @@
 import pygame
 from constant import *
 from Ship import *
-from new_front_enemy import new_front_enemy
 from game import start_screen
 pygame.init()
 pygame.mixer.init()
