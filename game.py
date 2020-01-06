@@ -11,15 +11,15 @@ def game(screen):
     player = pygame.sprite.Group()
     enemies = pygame.sprite.Group()
 
-    Player(enemies, all_sprites, player)
-    BackEnemy(player, all_sprites, enemies)
-    BackEnemy(player, all_sprites, enemies)
+    Player(bullets, enemies, all_sprites, player)
+    BackEnemy(bullets, player, all_sprites, enemies)
+    BackEnemy(bullets, player, all_sprites, enemies)
 
     bg = pygame.image.load('data/background.png')
     bg_y = 0
 
-    pygame.mixer.music.load('C:/Users/1/Documents/Python 3.6/GalaxyChase/data/gameplay.mp3')
-    pygame.mixer.music.play(-1)
+    #pygame.mixer.music.load('C:/Users/1/Documents/Python 3.6/GalaxyChase/data/gameplay.mp3')
+    #pygame.mixer.music.play(-1)
 
     run = True
     clock = pygame.time.Clock()
@@ -60,8 +60,8 @@ def game(screen):
 
 
 def start_screen(screen):
-    pygame.mixer.music.load('C:/Users/1/Documents/Python 3.6/GalaxyChase/data/start.mp3')
-    pygame.mixer.music.play()
+    #pygame.mixer.music.load('C:/Users/1/Documents/Python 3.6/GalaxyChase/data/start.mp3')
+    #pygame.mixer.music.play()
 
     clock = pygame.time.Clock()
     run = True
