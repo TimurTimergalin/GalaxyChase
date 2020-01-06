@@ -1,24 +1,26 @@
 import pygame
 from constant import *
 import random
+from shoots import Bullet
 
 
 class Ship(pygame.sprite.Sprite):
     boom = pygame.image.load('data/boom.png')
 
-    def __init__(self, *groups):
+    def __init__(self, bullets, *groups):
         super(Ship, self).__init__(groups)
         self.collided = False
         self.frames = []
         self.cut_sheet(Ship.boom, BOOM_WIDTH, BOOM_HEIGHT)
         self.cur_frame = 0
+        self.bullets = bullets
 
     def update(self, *args):
         if self.collided:
             self.collide()
 
-    def shoot(self):
-        pass
+    def shoot(self, cords, speed, *groups):
+        Bullet(cords, speed, *groups)
 
     def collide(self):
         try:
@@ -41,8 +43,8 @@ class Player(Ship):
     image = pygame.image.load('data/player.png')
     image.set_colorkey(image.get_at((0, 0)))
 
-    def __init__(self, enemy_group, *groups):
-        Ship.__init__(self, groups)
+    def __init__(self, bullets, enemy_group, *groups):
+        Ship.__init__(self, bullets, *groups)
         self.enemy_group = enemy_group
         self.effects = set()
         self.speed = 360 / FPS
@@ -58,7 +60,15 @@ class Player(Ship):
         if args and args[0] == MOVE_LEFT and self.rect.x - self.speed >= 0:
             self.rect = self.rect.move(-self.speed, 0)
         if args and args[0] == SHOOT_MADE:
-            self.shoot()
+            self.shoot((self.rect.x + self.rect.w // 2, self.rect.y), -2000 / FPS, self.bullets)
+        for i in self.enemy_group:
+            if pygame.sprite.collide_mask(self, i):
+                self.collided = True
+                self.rect.x -= 64
+                self.rect.y -= 64
+                i.kill()
+                break
+        Ship.update(self, *args)
 
 
 class BackEnemy(Ship):
@@ -66,15 +76,15 @@ class BackEnemy(Ship):
     image.set_colorkey(image.get_at((0, 0)))
     coord_x = 0
 
-    def __init__(self, player, *groups):
-        super(BackEnemy, self).__init__(groups)
+    def __init__(self, bullets, player, *groups):
+        super(BackEnemy, self).__init__(bullets, *groups)
         self.player = player
         self.image = BackEnemy.image
         self.rect = self.image.get_rect()
         self.rect.x = BackEnemy.coord_x
         BackEnemy.coord_x = 250
         self.rect.y = HEIGHT - 50
-        self.speed = 480
+        self.speed = 240
         self.mask = pygame.mask.from_surface(self.image)
 
     def update(self, *args):
@@ -88,6 +98,9 @@ class BackEnemy(Ship):
             self.rect.x += self.speed / FPS
         if random.randint(1, 50) == 1:
             self.speed *= -1
+        if random.randint(1, 250) == 1:
+            self.shoot((self.rect.x + self.rect.w // 2, self.rect.y), -2000 / FPS, self.bullets)
+        Ship.update(self, *args)
 
 
 class FrontEnemy(Ship):
@@ -95,8 +108,8 @@ class FrontEnemy(Ship):
     image.set_colorkey(image.get_at((0, 0)))
     chance = 50
 
-    def __init__(self, player, *groups):
-        super(FrontEnemy, self).__init__(groups)
+    def __init__(self, bullets, player, *groups):
+        super(FrontEnemy, self).__init__(bullets, *groups)
         self.player = player
         self.image = FrontEnemy.image
         self.rect = self.image.get_rect()

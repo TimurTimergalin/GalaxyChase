@@ -8,14 +8,15 @@ import sys
 
 
 def game(screen):
+    bullets = pygame.sprite.Group()
     all_sprites = pygame.sprite.Group()
     player = pygame.sprite.Group()
     enemies = pygame.sprite.Group()
     bonuses = pygame.sprite.Group()
 
-    Player(enemies, all_sprites, player)
-    BackEnemy(player, all_sprites, enemies)
-    BackEnemy(player, all_sprites, enemies)
+    Player(bullets, enemies, all_sprites, player)
+    BackEnemy(bullets, player, all_sprites, enemies)
+    BackEnemy(bullets, player, all_sprites, enemies)
 
     bg = pygame.image.load('data/background.png')
     bg_y = 0
@@ -33,17 +34,20 @@ def game(screen):
                 if event.key == pygame.K_ESCAPE:
                     pygame.mixer.music.stop()
                     return start_screen(screen, False)
+                if event.key == pygame.K_SPACE:
+                    player.update(SHOOT_MADE)
             if event.type == IS_DEAD:
                 pygame.time.set_timer(IS_DEAD, 0)
                 return start_screen(screen, False)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == pygame.BUTTON_LEFT:
+                    player.update(SHOOT_MADE)
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             player.update(MOVE_RIGHT)
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             player.update(MOVE_LEFT)
-        if keys[pygame.BUTTON_LEFT] or keys[pygame.K_SPACE]:
-            player.update(SHOOT_MADE)
 
         screen.blit(bg, (0, bg_y))
         screen.blit(bg, (0, bg_y - HEIGHT))
@@ -51,10 +55,12 @@ def game(screen):
         if bg_y >= HEIGHT:
             bg_y = 0
 
-        new_front_enemy(player, all_sprites, enemies)
+        new_front_enemy(player, bullets, all_sprites, enemies)
         new_bonus(player, enemies, all_sprites, bonuses)
         all_sprites.update()
         all_sprites.draw(screen)
+        bullets.update()
+        bullets.draw(screen)
         for i in player:
             for j in i.effects:
                 if j == 'shield':
