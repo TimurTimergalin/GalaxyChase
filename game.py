@@ -1,7 +1,9 @@
 import pygame
 from constant import *
 from Ship import *
+from Bonus import *
 from new_front_enemy import new_front_enemy
+from new_bonus import new_bonus
 import sys
 
 
@@ -9,6 +11,7 @@ def game(screen):
     all_sprites = pygame.sprite.Group()
     player = pygame.sprite.Group()
     enemies = pygame.sprite.Group()
+    bonuses = pygame.sprite.Group()
 
     Player(enemies, all_sprites, player)
     BackEnemy(player, all_sprites, enemies)
@@ -30,6 +33,9 @@ def game(screen):
                 if event.key == pygame.K_ESCAPE:
                     pygame.mixer.music.stop()
                     return start_screen(screen, False)
+            if event.type == IS_DEAD:
+                pygame.time.set_timer(IS_DEAD, 0)
+                return start_screen(screen, False)
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
@@ -46,8 +52,13 @@ def game(screen):
             bg_y = 0
 
         new_front_enemy(player, all_sprites, enemies)
+        new_bonus(player, enemies, all_sprites, bonuses)
         all_sprites.update()
         all_sprites.draw(screen)
+        for i in player:
+            for j in i.effects:
+                if j == 'shield':
+                    screen.blit(pygame.transform.scale(Shield.image, (22, 23)), (325, 5))
         pygame.display.flip()
         if not len(player):
             return start_screen(screen, False)

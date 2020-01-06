@@ -44,6 +44,7 @@ class Player(Ship):
     def __init__(self, enemy_group, *groups):
         Ship.__init__(self, groups)
         self.enemy_group = enemy_group
+        self.effects = set()
         self.speed = 360 / FPS
         self.image = Player.image
         self.rect = self.image.get_rect()
@@ -58,14 +59,6 @@ class Player(Ship):
             self.rect = self.rect.move(-self.speed, 0)
         if args and args[0] == SHOOT_MADE:
             self.shoot()
-        for i in self.enemy_group:
-            if pygame.sprite.collide_mask(self, i):
-                self.collided = True
-                self.rect.x -= 64
-                self.rect.y -= 64
-                i.kill()
-                break
-        Ship.update(self, *args)
 
 
 class BackEnemy(Ship):
@@ -96,18 +89,11 @@ class BackEnemy(Ship):
         if random.randint(1, 50) == 1:
             self.speed *= -1
 
-        for i in self.player:
-            if pygame.sprite.collide_mask(self, i):
-                self.collided = True
-                self.rect.x -= 64
-                self.rect.y -= 64
-                i.kill()
-        Ship.update(self, *args)
-
 
 class FrontEnemy(Ship):
     image = pygame.image.load('data/front_enemy.png')
     image.set_colorkey(image.get_at((0, 0)))
+    chance = 50
 
     def __init__(self, player, *groups):
         super(FrontEnemy, self).__init__(groups)
@@ -125,10 +111,16 @@ class FrontEnemy(Ship):
             self.kill()
 
         for i in self.player:
+            if self.collided:
+                break
             if pygame.sprite.collide_mask(self, i):
                 self.collided = True
-                self.rect.x -= 64
-                self.rect.y -= 64
-                i.kill()
+                self.rect = self.rect.move(-64, -64)
+                if 'shield' not in i.effects:
+                    i.kill()
+                    pygame.mixer.music.stop()
+                    pygame.time.set_timer(IS_DEAD, 1000)
+                else:
+                    i.effects.discard('shield')
 
         Ship.update(self, *args)
