@@ -63,10 +63,19 @@ class Player(Ship):
             self.shoot((self.rect.x + self.rect.w // 2, self.rect.y), -2000 / FPS, self.bullets)
         for i in self.enemy_group:
             if pygame.sprite.collide_mask(self, i):
-                self.collided = True
-                self.rect.x -= 64
-                self.rect.y -= 64
-                i.kill()
+                if i.collided:
+                    continue
+                if 'shield' not in self.effects:
+                    self.collided = True
+                    self.rect.x -= 64
+                    self.rect.y -= 64
+                    i.kill()
+                    pygame.mixer.music.stop()
+                    pygame.time.set_timer(IS_DEAD, 1000)
+                else:
+                    self.effects.discard('shield')
+                    i.collided = True
+                    i.rect = i.rect.move(-64, -64)
                 break
         Ship.update(self, *args)
 
