@@ -52,7 +52,7 @@ def game(screen):
             bg_y = 0
 
         new_front_enemy(player, all_sprites, enemies)
-        new_bonus(player, all_sprites, bonuses)
+        new_bonus(player, enemies, all_sprites, bonuses)
         all_sprites.update()
         all_sprites.draw(screen)
         for i in player:
