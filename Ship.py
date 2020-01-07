@@ -149,14 +149,15 @@ class FrontEnemy(Ship):
                     i.effects.discard('shield')
 
         if random.randint(1, 150) == 1:
-            self.shoot('enemy', (self.rect.x + self.rect.w // 2, self.rect.y), 1500 / FPS, self.bullets, self.player)
+            self.shoot('enemy', (self.rect.x + self.rect.w // 2, self.rect.y), 1500 / FPS, self.player, self.bullets)
 
         Ship.update(self, *args)
 
 
 class Kamikaze(Ship):
-    image = pygame.image.load('data/kamikaz.png')
-    image.set_colorkey(image.get_at((0, 0)))
+    chance = 75
+    image = pygame.image.load('data/kamikaze.png')
+    image.set_colorkey(image.get_at((1, 0)))
 
     def __init__(self, bullets, player, *groups):
         super(Kamikaze, self).__init__(bullets, *groups)
@@ -165,7 +166,7 @@ class Kamikaze(Ship):
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(0, WIDTH - self.rect.width)
         self.rect.y = -self.rect.height - 1
-        self.speed = 720
+        self.speed = 1440
         self.mask = pygame.mask.from_surface(self.image)
 
     def update(self, *args):
@@ -174,10 +175,16 @@ class Kamikaze(Ship):
             self.kill()
 
         for i in self.player:
+            if self.collided:
+                break
             if pygame.sprite.collide_mask(self, i):
                 self.collided = True
-                self.rect.x -= 64
-                self.rect.y -= 64
-                i.kill()
+                self.rect = self.rect.move(-64, -64)
+                if 'shield' not in i.effects:
+                    i.kill()
+                    pygame.mixer.music.stop()
+                    pygame.time.set_timer(IS_DEAD, 1000)
+                else:
+                    i.effects.discard('shield')
 
         Ship.update(self, *args)

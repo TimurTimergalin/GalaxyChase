@@ -64,6 +64,8 @@ class Bomb(Bonus):
             if type(i) == BackEnemy:
                 continue
             i.collided = True
+            i.rect.x -= 64
+            i.rect.y -= 64
 
     def update(self):
         self.rect = self.rect.move(0, self.speed)
