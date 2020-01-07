@@ -3,7 +3,7 @@ import random
 
 
 def new_bonus(player, enemy, *groups):
-    bonuses = [Shield, Bomb]
+    bonuses = [Shield, Bomb, Tower]
     i = random.choice(bonuses)
     if random.randint(1, i.chance) == 1 and len(groups[1]) < 1:
         i(player, enemy, *groups)

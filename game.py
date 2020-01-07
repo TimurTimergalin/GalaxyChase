@@ -42,12 +42,26 @@ def game(screen):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == pygame.BUTTON_LEFT:
                     player.update(SHOOT_MADE)
+            if event.type == TOWER_ON:
+                pygame.time.set_timer(TOWER_ON, 0)
+                for i in player:
+                    i.effects.discard('tower')
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             player.update(MOVE_RIGHT)
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             player.update(MOVE_LEFT)
+        if keys[pygame.K_SPACE]:
+            for i in player:
+                if 'tower' in i.effects:
+                    player.update(SHOOT_MADE)
+
+        buttons = pygame.mouse.get_pressed()
+        if buttons[0]:
+            for i in player:
+                if 'tower' in i.effects:
+                    player.update(SHOOT_MADE)
 
         screen.blit(bg, (0, bg_y))
         screen.blit(bg, (0, bg_y - HEIGHT))
@@ -65,6 +79,8 @@ def game(screen):
             for j in i.effects:
                 if j == 'shield':
                     screen.blit(pygame.transform.scale(Shield.image, (22, 23)), (325, 5))
+                elif j == 'tower':
+                    screen.blit(pygame.transform.scale(Tower.image, (10, 25)), (300, 5))
         pygame.display.flip()
         clock.tick(FPS)
 
