@@ -152,3 +152,32 @@ class FrontEnemy(Ship):
             self.shoot('enemy', (self.rect.x + self.rect.w // 2, self.rect.y), 1500 / FPS, self.bullets, self.player)
 
         Ship.update(self, *args)
+
+
+class Kamikaze(Ship):
+    image = pygame.image.load('data/kamikaz.png')
+    image.set_colorkey(image.get_at((0, 0)))
+
+    def __init__(self, bullets, player, *groups):
+        super(Kamikaze, self).__init__(bullets, *groups)
+        self.player = player
+        self.image = Kamikaze.image
+        self.rect = self.image.get_rect()
+        self.rect.x = random.randint(0, WIDTH - self.rect.width)
+        self.rect.y = -self.rect.height - 1
+        self.speed = 720
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def update(self, *args):
+        self.rect = self.rect.move(0, self.speed / FPS)
+        if self.rect.y >= HEIGHT:
+            self.kill()
+
+        for i in self.player:
+            if pygame.sprite.collide_mask(self, i):
+                self.collided = True
+                self.rect.x -= 64
+                self.rect.y -= 64
+                i.kill()
+
+        Ship.update(self, *args)
