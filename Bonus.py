@@ -65,9 +65,35 @@ class Bomb(Bonus):
                 continue
             i.collided = True
 
+    def update(self):
+        self.rect = self.rect.move(0, self.speed)
+        if self.rect.y >= HEIGHT:
+            self.kill()
+        super().update()
+
+
+class Tower(Bonus):
+    image = pygame.image.load('data/tower.png')
+    image.set_colorkey(image.get_at((0, 0)))
+    chance = 10000
+
+    def __init__(self, player, enemy=None, *groups):
+        super(Tower, self).__init__(player, enemy, groups)
+        self.image = Tower.image
+        self.rect = self.image.get_rect()
+        self.rect.x = random.randint(0, WIDTH - self.rect.width)
+        self.rect.y = -self.rect.height - 1
+        self.mask = pygame.mask.from_surface(self.image)
+        self.speed = 240 / FPS
+
+    def effect(self, player):
+        player.effects.add('tower')
+        pygame.time.set_timer(TOWER_ON, 0)
+        pygame.time.set_timer(TOWER_ON, 5000)
 
     def update(self):
         self.rect = self.rect.move(0, self.speed)
         if self.rect.y >= HEIGHT:
             self.kill()
         super().update()
+
