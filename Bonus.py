@@ -2,6 +2,7 @@ import pygame
 import random
 from constant import *
 from Ship import *
+from Score import Score
 pygame.init()
 
 
@@ -18,6 +19,7 @@ class Bonus(pygame.sprite.Sprite):
             if pygame.sprite.collide_mask(self, i):
                 self.effect(i)
                 self.kill()
+                Score.add_score(100)
 
 
 class Shield(Bonus):
