@@ -5,6 +5,7 @@ from Bonus import *
 from new_front_enemy import new_front_enemy
 from new_bonus import new_bonus
 import sys
+from Score import Score
 
 
 def game(screen):
@@ -33,11 +34,13 @@ def game(screen):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pygame.mixer.music.stop()
+                    Score.clear()
                     return start_screen(screen, False)
                 if event.key == pygame.K_SPACE:
                     player.update(SHOOT_MADE)
             if event.type == IS_DEAD:
                 pygame.time.set_timer(IS_DEAD, 0)
+                Score.clear()
                 return start_screen(screen, False)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == pygame.BUTTON_LEFT:
@@ -69,6 +72,8 @@ def game(screen):
         if bg_y >= HEIGHT:
             bg_y = 0
 
+        score_font = pygame.font.SysFont('arialblack', 20)
+
         new_front_enemy(player, bullets, all_sprites, enemies)
         new_bonus(player, enemies, all_sprites, bonuses)
         all_sprites.update()
@@ -81,6 +86,10 @@ def game(screen):
                     screen.blit(pygame.transform.scale(Shield.image, (22, 23)), (325, 5))
                 elif j == 'tower':
                     screen.blit(pygame.transform.scale(Tower.image, (10, 25)), (300, 5))
+
+        text = score_font.render(Score.get_score(), 1, (255, 255, 255))
+        screen.blit(text, (0, 0))
+        Score.add_score(BASE_SCORE)
         pygame.display.flip()
         clock.tick(FPS)
 
@@ -149,6 +158,7 @@ def start_screen(screen, first_time=True):
                 elif planet_x <= event.pos[0] <= planet_x + planet.get_width() and \
                         -HEIGHT // 2 - planet.get_height() + dy1 <= event.pos[1] <=\
                         -HEIGHT // 2 - planet.get_height() + dy1 + planet.get_height():
+                    Score.dead = False
                     if first_time:
                         return controls_screen(screen)
                     else:

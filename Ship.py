@@ -2,6 +2,7 @@ import pygame
 from constant import *
 import random
 from shoots import *
+from Score import Score
 
 
 class Ship(pygame.sprite.Sprite):
@@ -74,6 +75,7 @@ class Player(Ship):
                     self.rect.y -= 64
                     i.kill()
                     pygame.mixer.music.stop()
+                    Score.dead = True
                     pygame.time.set_timer(IS_DEAD, 1000)
                 else:
                     self.effects.discard('shield')
@@ -144,6 +146,7 @@ class FrontEnemy(Ship):
                 if 'shield' not in i.effects:
                     i.kill()
                     pygame.mixer.music.stop()
+                    Score.dead = True
                     pygame.time.set_timer(IS_DEAD, 1000)
                 else:
                     i.effects.discard('shield')

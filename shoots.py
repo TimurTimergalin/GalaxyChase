@@ -1,5 +1,6 @@
 import pygame
 from constant import *
+from Score import Score
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -33,6 +34,7 @@ class PlayerBullet(Bullet):
                 i.collided = True
                 i.rect.x -= 64
                 i.rect.y -= 64
+                Score.add_score(50)
                 break
 
 
@@ -54,5 +56,6 @@ class EnemyBullet(Bullet):
                     i.rect.x -= 64
                     i.rect.y -= 64
                     pygame.mixer.music.stop()
+                    Score.dead = True
                     pygame.time.set_timer(IS_DEAD, 1000)
 
