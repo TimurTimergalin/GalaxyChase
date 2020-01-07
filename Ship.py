@@ -139,7 +139,7 @@ class Kamikaze(Ship):
     def __init__(self, bullets, player, *groups):
         super(Kamikaze, self).__init__(bullets, *groups)
         self.player = player
-        self.image = FrontEnemy.image
+        self.image = Kamikaze.image
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(0, WIDTH - self.rect.width)
         self.rect.y = -self.rect.height - 1
