@@ -4,6 +4,8 @@ import random
 from shoots import *
 from Score import Score
 
+pygame.init()
+
 
 class Ship(pygame.sprite.Sprite):
     boom = pygame.image.load('data/boom.png')
@@ -27,6 +29,7 @@ class Ship(pygame.sprite.Sprite):
             EnemyBullet(cords, speed, target, *groups)
 
     def collide(self):
+        pygame.mixer.Sound('data/death.ogg').play()
         try:
             self.image = self.frames[self.cur_frame]
             self.cur_frame += 1
@@ -78,6 +81,7 @@ class Player(Ship):
                     Score.dead = True
                     pygame.time.set_timer(IS_DEAD, 1000)
                 else:
+                    pygame.mixer.Sound('data/damage.ogg').play()
                     self.effects.discard('shield')
                     i.collided = True
                     i.rect = i.rect.move(-64, -64)
@@ -149,6 +153,7 @@ class FrontEnemy(Ship):
                     Score.dead = True
                     pygame.time.set_timer(IS_DEAD, 1000)
                 else:
+                    pygame.mixer.Sound('data/damage.ogg').play()
                     i.effects.discard('shield')
 
         if random.randint(1, 150) == 1:
@@ -189,5 +194,6 @@ class Kamikaze(Ship):
                     pygame.time.set_timer(IS_DEAD, 1000)
                 else:
                     i.effects.discard('shield')
+                    pygame.mixer.Sound('data/damage.ogg').play()
 
         Ship.update(self, *args)

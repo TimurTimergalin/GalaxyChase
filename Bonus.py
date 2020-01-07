@@ -12,6 +12,7 @@ class Bonus(pygame.sprite.Sprite):
         self.player = player
 
     def effect(self, player):
+        pygame.mixer.Sound('data/bonus.wav').play()
         return
 
     def update(self):
@@ -37,6 +38,7 @@ class Shield(Bonus):
         self.speed = 240 / FPS
 
     def effect(self, player):
+        super(Shield, self).effect(player)
         player.effects.add('shield')
 
     def update(self):
@@ -49,7 +51,7 @@ class Shield(Bonus):
 class Bomb(Bonus):
     image = pygame.image.load('data/bomb.png')
     image.set_colorkey(image.get_at((1, 0)))
-    chance = 12000
+    chance = 8000
 
     def __init__(self, player, enemy, *groups):
         super().__init__(player, enemy, *groups)
@@ -68,6 +70,7 @@ class Bomb(Bonus):
             i.collided = True
             i.rect.x -= 64
             i.rect.y -= 64
+        super(Bomb, self).effect(player)
 
     def update(self):
         self.rect = self.rect.move(0, self.speed)
@@ -94,6 +97,7 @@ class Tower(Bonus):
         player.effects.add('tower')
         pygame.time.set_timer(TOWER_ON, 0)
         pygame.time.set_timer(TOWER_ON, 5000)
+        super(Tower, self).effect(player)
 
     def update(self):
         self.rect = self.rect.move(0, self.speed)

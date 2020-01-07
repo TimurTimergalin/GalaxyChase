@@ -1,11 +1,13 @@
 import pygame
 from constant import *
 from Score import Score
+pygame.init()
 
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, cords, speed, target, *groups):
         pygame.sprite.Sprite.__init__(self, *groups)
+        pygame.mixer.Sound('data/pew.wav').play()
         self.image = pygame.Surface((10, 10))
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = cords
@@ -58,4 +60,6 @@ class EnemyBullet(Bullet):
                     pygame.mixer.music.stop()
                     Score.dead = True
                     pygame.time.set_timer(IS_DEAD, 1000)
+                else:
+                    pygame.mixer.Sound('data/damage.ogg').play()
 
