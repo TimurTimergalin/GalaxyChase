@@ -15,6 +15,8 @@ def game(screen):
     enemies = pygame.sprite.Group()
     bonuses = pygame.sprite.Group()
 
+    record = int(open('data/scores.scr').readline().strip())
+
     Player(bullets, enemies, all_sprites, player)
     BackEnemy(bullets, player, all_sprites, enemies)
     BackEnemy(bullets, player, all_sprites, enemies)
@@ -90,6 +92,17 @@ def game(screen):
         text = score_font.render(Score.get_score(), 1, (255, 255, 255))
         screen.blit(text, (0, 0))
         Score.add_score(BASE_SCORE)
+        if not len(player):
+            font = pygame.font.SysFont('arialblack', 50)
+            if int(Score.score) > record:
+                text = 'HIGH SCORE'
+                new_score = open('data/scores.scr', 'w')
+                new_score.write(str(int(Score.score)) + '\n')
+                new_score.write('False')
+                new_score.close()
+            else:
+                text = 'GAME OVER'
+            screen.blit(font.render(text, 1, (255, 0, 0)), (0, 325))
         pygame.display.flip()
         clock.tick(FPS)
 
