@@ -1,7 +1,7 @@
 import pygame
 from constant import *
 import random
-from shoots import Bullet
+from shoots import *
 
 
 class Ship(pygame.sprite.Sprite):
@@ -19,8 +19,11 @@ class Ship(pygame.sprite.Sprite):
         if self.collided:
             self.collide()
 
-    def shoot(self, cords, speed, *groups):
-        Bullet(cords, speed, *groups)
+    def shoot(self, type_, cords, speed, target, *groups):
+        if type_ == 'player':
+            PlayerBullet(cords, speed, target, *groups)
+        else:
+            EnemyBullet(cords, speed, target, *groups)
 
     def collide(self):
         try:
@@ -60,7 +63,7 @@ class Player(Ship):
         if args and args[0] == MOVE_LEFT and self.rect.x - self.speed >= 0:
             self.rect = self.rect.move(-self.speed, 0)
         if args and args[0] == SHOOT_MADE:
-            self.shoot((self.rect.x + self.rect.w // 2, self.rect.y), -2000 / FPS, self.bullets)
+            self.shoot('player', (self.rect.x + self.rect.w // 2, self.rect.y), -2000 / FPS, self.enemy_group, self.bullets)
         for i in self.enemy_group:
             if pygame.sprite.collide_mask(self, i):
                 if i.collided:
@@ -108,7 +111,7 @@ class BackEnemy(Ship):
         if random.randint(1, 50) == 1:
             self.speed *= -1
         if random.randint(1, 250) == 1:
-            self.shoot((self.rect.x + self.rect.w // 2, self.rect.y), -2000 / FPS, self.bullets)
+            self.shoot('enemy', (self.rect.x + self.rect.w // 2, self.rect.y), -1500 / FPS, self.player, self.bullets)
         Ship.update(self, *args)
 
 
@@ -144,5 +147,8 @@ class FrontEnemy(Ship):
                     pygame.time.set_timer(IS_DEAD, 1000)
                 else:
                     i.effects.discard('shield')
+
+        if random.randint(1, 150) == 1:
+            self.shoot('enemy', (self.rect.x + self.rect.w // 2, self.rect.y), 1500 / FPS, self.bullets, self.player)
 
         Ship.update(self, *args)
