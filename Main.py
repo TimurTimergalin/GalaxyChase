@@ -1,6 +1,5 @@
 import pygame
 from constant import *
-from Ship import *
 from game import start_screen
 pygame.init()
 pygame.mixer.init()

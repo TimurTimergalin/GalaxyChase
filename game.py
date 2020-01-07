@@ -24,7 +24,7 @@ def game(screen):
     bg = pygame.image.load('data/background.png')
     bg_y = 0
 
-    pygame.mixer.music.load('C:/Users/1/Documents/Python 3.6/GalaxyChase/data/gameplay.mp3')
+    pygame.mixer.music.load('data/gameplay.mp3')
     pygame.mixer.music.play(-1)
 
     run = True
@@ -36,6 +36,11 @@ def game(screen):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pygame.mixer.music.stop()
+                    if Score.score > record:
+                        new_score = open('data/scores.scr', 'w')
+                        new_score.write(str(int(Score.score)) + '\n')
+                        new_score.write('False')
+                        new_score.close()
                     Score.clear()
                     return start_screen(screen, False)
                 if event.key == pygame.K_SPACE:
@@ -49,6 +54,7 @@ def game(screen):
                     player.update(SHOOT_MADE)
             if event.type == TOWER_ON:
                 pygame.time.set_timer(TOWER_ON, 0)
+                pygame.mixer.Sound('data/damage.ogg').play()
                 for i in player:
                     i.effects.discard('tower')
 
@@ -108,7 +114,7 @@ def game(screen):
 
 
 def start_screen(screen, first_time=True):
-    pygame.mixer.music.load('C:/Users/1/Documents/Python 3.6/GalaxyChase/data/start.mp3')
+    pygame.mixer.music.load('data/start.mp3')
     pygame.mixer.music.play()
 
     clock = pygame.time.Clock()
