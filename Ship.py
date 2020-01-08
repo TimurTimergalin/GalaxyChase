@@ -207,7 +207,6 @@ class Giant(Ship):
 
     def __init__(self, bullets, player, *groups):
         super(Giant, self).__init__(bullets, *groups)
-        print('++')
         self.player = player
         self.image = Giant.image
         self.rect = self.image.get_rect()
