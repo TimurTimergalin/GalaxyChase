@@ -69,6 +69,10 @@ class Player(Ship):
             self.rect = self.rect.move(-self.speed, 0)
         if args and args[0] == SHOOT_MADE:
             self.shoot('player', (self.rect.x + self.rect.w // 2, self.rect.y), -2000 / FPS, self.enemy_group, self.bullets)
+        if args and args[0] == MOVE_FORWARD:
+            self.rect = self.rect.move(0, -480 / FPS)
+            if self.rect.y < - self.rect.w:
+                self.kill()
         for i in self.enemy_group:
             if pygame.sprite.collide_mask(self, i):
                 if i.collided:
@@ -198,6 +202,35 @@ class Kamikaze(Ship):
                     pygame.mixer.Sound('data/damage.ogg').play()
 
         Ship.update(self, *args)
+
+
+class ShipTower(Ship):
+    image = pygame.image.load('data/ship_tower.png')
+    image.set_colorkey(image.get_at((0, 0)))
+
+    def __init__(self, bullets, enemy, *groups):
+        super().__init__(bullets, groups)
+        self.rect = self.image.get_rect()
+        self.rect.x = 0
+        self.rect.y = -90
+        self.speed_x = 480
+        self.speed_y = 1200
+        self.enemy = enemy
+        self.shot = True
+
+    def update(self):
+        self.rect = self.rect.move(self.speed_x / FPS, self.speed_y / FPS)
+        if self.shot:
+            self.shoot('player', (self.rect.x + self.rect.w // 2, self.rect.y), 3000 / FPS, self.enemy, self.bullets)
+
+    def stop_x(self):
+        self.speed_x = 0
+
+    def stop_y(self):
+        self.speed_y = 0
+
+    def stop_shoot(self):
+        self.shot = False
 
 
 class Giant(Ship):

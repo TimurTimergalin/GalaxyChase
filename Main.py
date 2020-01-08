@@ -1,6 +1,6 @@
 import pygame
 from constant import *
-from game import start_screen
+from game import *
 pygame.init()
 pygame.mixer.init()
 size = WIDTH, HEIGHT
