@@ -53,7 +53,7 @@ def game(screen):
                     if Score.score > record:
                         new_score = open('data/scores.scr', 'w')
                         new_score.write(str(int(Score.score)) + '\n')
-                        new_score.write('False')
+                        new_score.write(str(ending_got))
                         new_score.close()
                     Score.clear()
                     return start_screen(screen, False)
@@ -176,8 +176,12 @@ def start_screen(screen, first_time=True, music=True):
     run = True
     bg = pygame.image.load('data/background.png')
     planet = pygame.image.load('data/planet1.png')
+    cup = pygame.image.load('data/cup.png')
+    cup.set_colorkey(cup.get_at((0, 0)))
     planet_x = WIDTH // 2 - planet.get_width() // 2
+    cup_x = WIDTH // 2
     planet.set_colorkey(planet.get_at((0, 0)))
+    ending_got = eval([i for i in open('data/scores.scr')][1].strip())
     bg_y = 0
     dy = 0
     dy1 = 0
@@ -199,6 +203,8 @@ def start_screen(screen, first_time=True, music=True):
         else:
             screen.blit(text, (65, 220))
         screen.blit(planet, (planet_x, -HEIGHT // 2 - planet.get_height() + dy1))
+        if ending_got:
+            screen.blit(cup, (cup_x, -HEIGHT // 2 - planet.get_height() - cup.get_height() + dy1))
         if go_down:
             dy += 50 / FPS
             dy1 += 50 / FPS
