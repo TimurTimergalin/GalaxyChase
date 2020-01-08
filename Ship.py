@@ -162,9 +162,9 @@ class Kamikaze(Ship):
 
 
 class Undine(Ship):
-    chance = 40
-    #image = pygame.image.load('data/kamikaze.png')
-    #image.set_colorkey(image.get_at((1, 0)))
+    chance = 150
+    image = pygame.image.load('data/giant.png')
+    image.set_colorkey(image.get_at((0, 0)))
 
     def __init__(self, bullets, player, *groups):
         super(Undine, self).__init__(bullets, *groups)
