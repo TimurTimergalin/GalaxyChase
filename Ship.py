@@ -197,3 +197,40 @@ class Kamikaze(Ship):
                     pygame.mixer.Sound('data/damage.ogg').play()
 
         Ship.update(self, *args)
+
+
+class Giant(Ship):
+    chance = 150
+    image = pygame.image.load('data/giant.png')
+    image.set_colorkey(image.get_at((0, 0)))
+
+    def __init__(self, bullets, player, *groups):
+        super(Giant, self).__init__(bullets, *groups)
+        self.player = player
+        self.image = Giant.image
+        self.rect = self.image.get_rect()
+        self.rect.x = random.randint(0, 100)
+        self.rect.y = 700
+        self.speed = 400
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def update(self, *args):
+        self.rect = self.rect.move(0, self.speed / FPS)
+        if self.rect.y >= HEIGHT:
+            self.kill()
+
+        for i in self.player:
+            if self.collided:
+                break
+            if pygame.sprite.collide_mask(self, i):
+                self.collided = True
+                self.rect = self.rect.move(-64, -64)
+                if 'shield' not in i.effects:
+                    i.kill()
+                    pygame.mixer.music.stop()
+                    pygame.time.set_timer(IS_DEAD, 1000)
+                else:
+                    i.effects.discard('shield')
+                    pygame.mixer.Sound('data/damage.ogg').play()
+
+        Ship.update(self, *args)
