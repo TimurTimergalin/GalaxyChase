@@ -14,8 +14,18 @@ def game(screen):
     player = pygame.sprite.Group()
     enemies = pygame.sprite.Group()
     bonuses = pygame.sprite.Group()
+    towers = pygame.sprite.Group()
 
-    record = int(open('data/scores.scr').readline().strip())
+    score = open('data/scores.scr')
+    record = int(score.readline().strip())
+    ending_got = score.readline().strip()
+    if ending_got == 'False':
+        ending_got = False
+    else:
+        ending_got = True
+    score.close()
+
+    ending = False
 
     Player(bullets, enemies, all_sprites, player)
     BackEnemy(bullets, player, all_sprites, enemies)
@@ -23,6 +33,10 @@ def game(screen):
 
     bg = pygame.image.load('data/background.png')
     bg_y = 0
+
+    ship_y = 0
+    ship_platform = pygame.image.load('data/platform.png')
+    ship_top = pygame.image.load('data/top.png')
 
     pygame.mixer.music.load('data/gameplay.mp3')
     pygame.mixer.music.play(-1)
@@ -34,7 +48,7 @@ def game(screen):
             if event.type == pygame.QUIT:
                 run = False
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+                if event.key == pygame.K_ESCAPE:  # and not ending:
                     pygame.mixer.music.stop()
                     if Score.score > record:
                         new_score = open('data/scores.scr', 'w')
@@ -76,39 +90,77 @@ def game(screen):
 
         screen.blit(bg, (0, bg_y))
         screen.blit(bg, (0, bg_y - HEIGHT))
-        bg_y += 1200 / FPS
+        if ship_y <= 100:
+            bg_y += 1200 / FPS
         if bg_y >= HEIGHT:
             bg_y = 0
 
+        if int(Score.score) >= 5000 and not ending_got:
+            ending = True
+            Score.dead = True
+
+        if ending:
+            screen.blit(ship_platform, (0, -100 + ship_y))
+
         score_font = pygame.font.SysFont('arialblack', 20)
 
-        new_front_enemy(player, bullets, all_sprites, enemies)
-        new_bonus(player, enemies, all_sprites, bonuses)
+        if not ending:
+            new_front_enemy(player, bullets, all_sprites, enemies)
+            new_bonus(player, enemies, all_sprites, bonuses)
+        if ship_y >= 100:
+            player.update(MOVE_FORWARD)
         all_sprites.update()
         all_sprites.draw(screen)
         bullets.update()
         bullets.draw(screen)
-        for i in player:
-            for j in i.effects:
-                if j == 'shield':
-                    screen.blit(pygame.transform.scale(Shield.image, (22, 23)), (325, 5))
-                elif j == 'tower':
-                    screen.blit(pygame.transform.scale(Tower.image, (10, 25)), (300, 5))
+        if not ending:
+            for i in player:
+                for j in i.effects:
+                    if j == 'shield':
+                        screen.blit(pygame.transform.scale(Shield.image, (22, 23)), (325, 5))
+                    elif j == 'tower':
+                        screen.blit(pygame.transform.scale(Tower.image, (10, 25)), (300, 5))
 
         text = score_font.render(Score.get_score(), 1, (255, 255, 255))
-        screen.blit(text, (0, 0))
+        if not ending:
+            screen.blit(text, (0, 0))
         Score.add_score(BASE_SCORE)
-        if not len(player):
+        if not len(player) and not ending:
             font = pygame.font.SysFont('arialblack', 50)
             if int(Score.score) > record:
                 text = 'HIGH SCORE'
                 new_score = open('data/scores.scr', 'w')
                 new_score.write(str(int(Score.score)) + '\n')
-                new_score.write('False')
+                new_score.write(str(ending_got))
                 new_score.close()
             else:
                 text = 'GAME OVER'
             screen.blit(font.render(text, 1, (255, 0, 0)), (0, 325))
+
+        elif not len(player) and ending:
+            new_score = open('data/scores.scr', 'w')
+            new_score.write(str(int(Score.score)) + '\n')
+            new_score.write(str(True))
+            new_score.close()
+            return titles(screen)
+
+        if ending:
+            screen.blit(ship_top, (0, ship_y - 100))
+            if not len(towers):
+                ShipTower(bullets, enemies, towers)
+            if ship_y < 100:
+                ship_y += 1200 / FPS
+            else:
+                ship_y = 100
+                for i in towers:
+                    i.stop_y()
+
+            for i in towers:
+                if i.rect.x == WIDTH - i.rect.w:
+                    i.stop_x()
+                    i.stop_shoot()
+            towers.update()
+            towers.draw(screen)
         pygame.display.flip()
         clock.tick(FPS)
 
@@ -222,3 +274,7 @@ def controls_screen(screen):
 
         pygame.display.flip()
         clock.tick(FPS)
+
+
+def titles(screen):
+    pass
