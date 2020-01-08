@@ -66,6 +66,7 @@ def game(screen):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == pygame.BUTTON_LEFT:
                     player.update(SHOOT_MADE)
+                    Score.add_score(-5)
             if event.type == TOWER_ON:
                 pygame.time.set_timer(TOWER_ON, 0)
                 pygame.mixer.Sound('data/damage.ogg').play()
@@ -142,6 +143,7 @@ def game(screen):
             new_score.write(str(int(Score.score)) + '\n')
             new_score.write(str(True))
             new_score.close()
+            pygame.mixer.music.stop()
             return titles(screen)
 
         if ending:
@@ -165,9 +167,10 @@ def game(screen):
         clock.tick(FPS)
 
 
-def start_screen(screen, first_time=True):
-    pygame.mixer.music.load('data/start.mp3')
-    pygame.mixer.music.play()
+def start_screen(screen, first_time=True, music=True):
+    if music:
+        pygame.mixer.music.load('data/start.mp3')
+        pygame.mixer.music.play()
 
     clock = pygame.time.Clock()
     run = True
@@ -185,7 +188,7 @@ def start_screen(screen, first_time=True):
     while run:
         text = font.render('Galaxy Chase', 1, (255, 200, 0))
         if not first_time:
-            bg_y = text.get_height()
+            bg_y = 0
             dy1 = HEIGHT + text.get_height()
             dy = HEIGHT + text.get_height()
             go_down = False
@@ -277,4 +280,50 @@ def controls_screen(screen):
 
 
 def titles(screen):
-    pass
+    pygame.mixer.music.load('data/start.mp3')
+    pygame.mixer.music.play()
+    text = '''Our hero reached the Alliance  Base.
+The   intelligence that he had  stolen
+from   Empire  will  definitely     help
+the     Confederation   to    save   the
+galaxy     from    H.U.G.E.     Empire's
+hegemony.     The    captain    of  the
+"Fastest Lily" was    raised to  major
+of the United Navy  of Confederation.
+Glory      to    the    Alliance,   Major!'''.split('\n')
+
+    thanks = 'Thank you for playing!'
+    endings = '"Galaxy Chase" v1.0, TimurTimergalin and Denk, 2020'
+    font1 = pygame.font.SysFont('arialblack', 17)
+    font2 = pygame.font.SysFont('arialblack', 25)
+    font3 = pygame.font.SysFont('calibri', 10)
+    pygame.time.set_timer(GOING_UP, 3000)
+
+    dy = 0
+    going_up = False
+
+    clock = pygame.time.Clock()
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            if event.type == GOING_UP:
+                going_up = True
+                pygame.time.set_timer(GOING_UP, 0)
+            if event.type in [pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN]:
+                return start_screen(screen, False, False)
+
+        screen.blit(pygame.image.load('data/background.png'), (0, 0))
+        thanks_sur = font2.render(thanks, 1, (255, 255, 0))
+        screen.blit(thanks_sur, (20, HEIGHT // 2 - dy))
+        for i in range(len(text)):
+            screen.blit(font1.render(text[i], 1, (255, 255, 0)), (7, 1.25 * HEIGHT + 55 * i - dy))
+        screen.blit(font3.render(endings, 1, (255, 255, 0)), (30, 1.4 * HEIGHT + 45 * 8 + 30 - dy))
+        if going_up:
+            dy += 30 / FPS
+
+        if dy == 1.4 * HEIGHT + 45 * 8 + 40:
+            return start_screen(screen, False, False)
+        pygame.display.flip()
+        clock.tick(FPS)
