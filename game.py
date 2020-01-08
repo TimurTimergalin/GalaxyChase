@@ -59,6 +59,7 @@ def game(screen):
                     return start_screen(screen, False)
                 if event.key == pygame.K_SPACE:
                     player.update(SHOOT_MADE)
+                    Score.add_score(-5)
             if event.type == IS_DEAD:
                 pygame.time.set_timer(IS_DEAD, 0)
                 Score.clear()
