@@ -6,6 +6,8 @@ class Score:
     def add_score(num):
         if not Score.dead:
             Score.score += num
+            if Score.score < 0:
+                Score.score = 0
 
     @staticmethod
     def get_score():
