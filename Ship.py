@@ -17,6 +17,7 @@ class Ship(pygame.sprite.Sprite):
         self.cut_sheet(Ship.boom, BOOM_WIDTH, BOOM_HEIGHT)
         self.cur_frame = 0
         self.bullets = bullets
+        self.bulletproof = False
 
     def update(self, *args):
         if self.collided:
@@ -206,13 +207,15 @@ class Giant(Ship):
 
     def __init__(self, bullets, player, *groups):
         super(Giant, self).__init__(bullets, *groups)
+        print('++')
         self.player = player
         self.image = Giant.image
         self.rect = self.image.get_rect()
-        self.rect.x = random.randint(0, 100)
-        self.rect.y = 700
+        self.rect.x = random.randint(0, WIDTH - self.rect.w)
+        self.rect.y = -self.rect.h - 1
         self.speed = 400
         self.mask = pygame.mask.from_surface(self.image)
+        self.bulletproof = True
 
     def update(self, *args):
         self.rect = self.rect.move(0, self.speed / FPS)
@@ -232,5 +235,8 @@ class Giant(Ship):
                 else:
                     i.effects.discard('shield')
                     pygame.mixer.Sound('data/damage.ogg').play()
+
+        if random.randint(1, 50) == 1:
+            self.shoot('enemy', (self.rect.x + self.rect.w // 2, self.rect.y), 1500 / FPS, self.player, self.bullets)
 
         Ship.update(self, *args)
