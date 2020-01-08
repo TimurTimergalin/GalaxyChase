@@ -33,10 +33,11 @@ class PlayerBullet(Bullet):
                 if i.collided:
                     continue
                 self.kill()
-                i.collided = True
-                i.rect.x -= 64
-                i.rect.y -= 64
-                Score.add_score(50)
+                if not i.bulletproof:
+                    i.collided = True
+                    i.rect.x -= 64
+                    i.rect.y -= 64
+                    Score.add_score(50)
                 break
 
 
