@@ -161,15 +161,15 @@ class Kamikaze(Ship):
         Ship.update(self, *args)
 
 
-class Undine(Ship):
+class Giant(Ship):
     chance = 150
     image = pygame.image.load('data/giant.png')
     image.set_colorkey(image.get_at((0, 0)))
 
     def __init__(self, bullets, player, *groups):
-        super(Undine, self).__init__(bullets, *groups)
+        super(Giant, self).__init__(bullets, *groups)
         self.player = player
-        self.image = Kamikaze.image
+        self.image = Giant.image
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(0, 100)
         self.rect.y = 700
