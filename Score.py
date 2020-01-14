@@ -1,4 +1,4 @@
-class Score:
+class Score:  # Счётчик очков
     score = 0
     dead = False
 
