@@ -7,7 +7,7 @@ from Score import Score
 pygame.init()
 
 
-class Ship(pygame.sprite.Sprite):
+class Ship(pygame.sprite.Sprite):  # Шаблон корабля
     boom = pygame.image.load('data/boom.png')
 
     def __init__(self, bullets, *groups):
@@ -23,13 +23,13 @@ class Ship(pygame.sprite.Sprite):
         if self.collided:
             self.collide()
 
-    def shoot(self, type_, cords, speed, target, *groups):
+    def shoot(self, type_, cords, speed, target, *groups):  # Метод выстрела
         if type_ == 'player':
             PlayerBullet(cords, speed, target, *groups)
         else:
             EnemyBullet(cords, speed, target, *groups)
 
-    def collide(self):
+    def collide(self):  # Метод взрыва
         pygame.mixer.Sound('data/death.ogg').play()
         try:
             self.image = self.frames[self.cur_frame]
@@ -37,7 +37,7 @@ class Ship(pygame.sprite.Sprite):
         except IndexError:
             self.kill()
 
-    def cut_sheet(self, sheet, columns, rows):
+    def cut_sheet(self, sheet, columns, rows):  # Метод разрезания спрайтов
         self.new_rect = pygame.Rect(0, 0, sheet.get_width() // columns,
                                     sheet.get_height() // rows)
         for j in range(rows):
@@ -47,7 +47,7 @@ class Ship(pygame.sprite.Sprite):
                     frame_location, self.new_rect.size)))
 
 
-class Player(Ship):
+class Player(Ship):  # Корабль игрока
     image = pygame.image.load('data/player.png')
     image.set_colorkey(image.get_at((0, 0)))
 
@@ -94,7 +94,7 @@ class Player(Ship):
         Ship.update(self, *args)
 
 
-class BackEnemy(Ship):
+class BackEnemy(Ship):  # Враг, летящий сзади игрока
     image = pygame.image.load('data/back_enemy.png')
     image.set_colorkey(image.get_at((0, 0)))
     coord_x = 0
@@ -126,7 +126,7 @@ class BackEnemy(Ship):
         Ship.update(self, *args)
 
 
-class FrontEnemy(Ship):
+class FrontEnemy(Ship):  # Обычный враг
     image = pygame.image.load('data/front_enemy.png')
     image.set_colorkey(image.get_at((0, 0)))
     chance = 50
@@ -167,7 +167,7 @@ class FrontEnemy(Ship):
         Ship.update(self, *args)
 
 
-class Kamikaze(Ship):
+class Kamikaze(Ship):  # Быстрый враг-камикадзе
     chance = 75
     image = pygame.image.load('data/kamikaze.png')
     image.set_colorkey(image.get_at((1, 0)))
@@ -204,7 +204,7 @@ class Kamikaze(Ship):
         Ship.update(self, *args)
 
 
-class ShipTower(Ship):
+class ShipTower(Ship):  # Турель корабля-базы Альянса
     image = pygame.image.load('data/ship_tower.png')
     image.set_colorkey(image.get_at((0, 0)))
 
@@ -233,7 +233,7 @@ class ShipTower(Ship):
         self.shot = False
 
 
-class Giant(Ship):
+class Giant(Ship):  # Медленный, большой враг
     chance = 150
     image = pygame.image.load('data/giant.png')
     image.set_colorkey(image.get_at((0, 0)))

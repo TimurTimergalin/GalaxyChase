@@ -4,7 +4,7 @@ from Score import Score
 pygame.init()
 
 
-class Bullet(pygame.sprite.Sprite):
+class Bullet(pygame.sprite.Sprite):  # Шаблон пули
     def __init__(self, cords, speed, target, *groups):
         pygame.sprite.Sprite.__init__(self, *groups)
         pygame.mixer.Sound('data/pew.wav').play()
@@ -20,7 +20,7 @@ class Bullet(pygame.sprite.Sprite):
             self.kill()
 
 
-class PlayerBullet(Bullet):
+class PlayerBullet(Bullet):  # Пуля игрока
     def __init__(self, cords, speed, target, *groups):
         super(PlayerBullet, self).__init__(cords, speed, target, *groups)
         self.image.fill((0, 0, 255))
@@ -41,7 +41,7 @@ class PlayerBullet(Bullet):
                 break
 
 
-class EnemyBullet(Bullet):
+class EnemyBullet(Bullet):  # Пуля врага
     def __init__(self, cords, speed, target, *groups):
         super(EnemyBullet, self).__init__(cords, speed, target, *groups)
         self.image.fill((255, 0, 0))
@@ -63,4 +63,5 @@ class EnemyBullet(Bullet):
                     pygame.time.set_timer(IS_DEAD, 1000)
                 else:
                     pygame.mixer.Sound('data/damage.ogg').play()
+                    i.effects.discard('shield')
 

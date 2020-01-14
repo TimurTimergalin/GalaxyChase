@@ -6,7 +6,7 @@ from Score import Score
 pygame.init()
 
 
-class Bonus(pygame.sprite.Sprite):
+class Bonus(pygame.sprite.Sprite):  # Шаблон бонуса
     def __init__(self, player, enemy=None, *groups):
         super(Bonus, self).__init__(*groups)
         self.player = player
@@ -20,13 +20,13 @@ class Bonus(pygame.sprite.Sprite):
             if pygame.sprite.collide_mask(self, i):
                 self.effect(i)
                 self.kill()
-                Score.add_score(100)
+                Score.add_score(75)
 
 
-class Shield(Bonus):
+class Shield(Bonus):  # Класс бонуса 'Щит'
     image = pygame.image.load('data/shield.png')
     image.set_colorkey(image.get_at((0, 0)))
-    chance = 10000
+    chance = 7500
 
     def __init__(self, player, enemy=None, *groups):
         super(Shield, self).__init__(player, enemy, *groups)
@@ -48,10 +48,10 @@ class Shield(Bonus):
         super().update()
 
 
-class Bomb(Bonus):
+class Bomb(Bonus):  # Класс бонуса "Бомба"
     image = pygame.image.load('data/bomb.png')
     image.set_colorkey(image.get_at((1, 0)))
-    chance = 8000
+    chance = 5000
 
     def __init__(self, player, enemy, *groups):
         super().__init__(player, enemy, *groups)
@@ -79,10 +79,10 @@ class Bomb(Bonus):
         super().update()
 
 
-class Tower(Bonus):
+class Tower(Bonus):  # Класс бонуса "Турель"
     image = pygame.image.load('data/tower.png')
     image.set_colorkey(image.get_at((0, 0)))
-    chance = 10000
+    chance = 6800
 
     def __init__(self, player, enemy=None, *groups):
         super(Tower, self).__init__(player, enemy, groups)

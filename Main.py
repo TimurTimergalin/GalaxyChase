@@ -1,5 +1,7 @@
 import pygame
 from constant import *
+# Запуск программы
+
 from game import *
 pygame.init()
 pygame.mixer.init()
