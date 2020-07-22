@@ -37,7 +37,7 @@ class PlayerBullet(Bullet):  # Пуля игрока
                     i.collided = True
                     i.rect.x -= 64
                     i.rect.y -= 64
-                    Score.add_score(50)
+                    Score.add_score(100)
                 break
 
 

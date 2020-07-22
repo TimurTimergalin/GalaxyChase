@@ -26,7 +26,7 @@ class Bonus(pygame.sprite.Sprite):  # Шаблон бонуса
 class Shield(Bonus):  # Класс бонуса 'Щит'
     image = pygame.image.load('data/shield.png')
     image.set_colorkey(image.get_at((0, 0)))
-    chance = 7500
+    chance = 3750
 
     def __init__(self, player, enemy=None, *groups):
         super(Shield, self).__init__(player, enemy, *groups)
@@ -51,7 +51,7 @@ class Shield(Bonus):  # Класс бонуса 'Щит'
 class Bomb(Bonus):  # Класс бонуса "Бомба"
     image = pygame.image.load('data/bomb.png')
     image.set_colorkey(image.get_at((1, 0)))
-    chance = 5000
+    chance = 2500
 
     def __init__(self, player, enemy, *groups):
         super().__init__(player, enemy, *groups)
@@ -82,7 +82,7 @@ class Bomb(Bonus):  # Класс бонуса "Бомба"
 class Tower(Bonus):  # Класс бонуса "Турель"
     image = pygame.image.load('data/tower.png')
     image.set_colorkey(image.get_at((0, 0)))
-    chance = 6800
+    chance = 3400
 
     def __init__(self, player, enemy=None, *groups):
         super(Tower, self).__init__(player, enemy, groups)
