@@ -179,7 +179,7 @@ class Kamikaze(Ship):  # Быстрый враг-камикадзе
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(0, WIDTH - self.rect.width)
         self.rect.y = -self.rect.height - 1
-        self.speed = 1440
+        self.speed = 1000
         self.mask = pygame.mask.from_surface(self.image)
 
     def update(self, *args):
